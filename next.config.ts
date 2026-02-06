@@ -1,12 +1,18 @@
-const nextConfig = {
-  reactStrictMode: true,
-  // Force disable all turbopack features
-  experimental: {
-    webpackBuildWorker: true,
-    turbopack: false
-  },
-  // Use webpack
-  webpack: (config: any) => config,
-}
+// next.config.ts
+import type { NextConfig } from "next";
 
-module.exports = nextConfig
+const nextConfig: NextConfig = {
+  images: {
+    // Replace domains with remotePatterns
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ecommerce.routemisr.com',
+        pathname: '/**',
+      },
+      // Add other image domains you need here
+    ],
+  },
+};
+
+export default nextConfig;
