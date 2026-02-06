@@ -1,12 +1,16 @@
-const nextConfig = {
-  reactStrictMode: true,
-  // Force disable all turbopack features
-  experimental: {
-    webpackBuildWorker: true,
-    turbopack: false
-  },
-  // Use webpack
-  webpack: (config: any) => config,
-}
 
-module.exports = nextConfig
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* Remove or comment out the 'experimental.turbopack' line */
+  // experimental: {
+  //   turbopack: true,  // ← Remove this line
+  // },
+  
+  // Keep other settings you might have:
+  images: {
+    domains: ['ecommerce.routemisr.com'], // or your image domains
+  },
+};
+
+export default nextConfig;
