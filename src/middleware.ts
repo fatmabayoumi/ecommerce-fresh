@@ -1,20 +1,23 @@
+// src/middleware.ts
 import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
  
-// This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-
-const token=await getToken({req:request});
-if (token){
-    return NextResponse.next()
-}
-
-
-  return NextResponse.redirect(new URL('/auth/login', request.url))
+  const token = await getToken({ req: request })
+  
+  // Protect cart route
+  if (request.nextUrl.pathname.startsWith('/cart')) {
+    if (!token) {
+      return NextResponse.redirect(new URL('/auth/login', request.url))
+    }
+  }
+  
+  // Allow all other routes
+  return NextResponse.next()
 }
  
-// See "Matching Paths" below to learn more
+// Only protect cart route, not others
 export const config = {
-  matcher: [],
+  matcher: '/cart/:path*'  // This protects /cart and /cart/*
 }
