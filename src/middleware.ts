@@ -19,5 +19,5 @@ export async function middleware(request: NextRequest) {
  
 // Only protect cart route, not others
 export const config = {
-  matcher: '/cart/:path*'  // This protects /cart and /cart/*
+  matcher: [] // This protects /cart and /cart/*
 }
