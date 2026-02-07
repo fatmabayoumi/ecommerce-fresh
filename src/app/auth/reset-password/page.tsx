@@ -1,15 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams?: { email?: string };
+}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
+  
   const [formData, setFormData] = useState({
-    email: "",
+    email: searchParams?.email || "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -19,16 +22,6 @@ export default function ResetPasswordPage() {
   const [success, setSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  useEffect(() => {
-    const emailParam = searchParams.get("email");
-    if (emailParam) {
-      setFormData((prev) => ({
-        ...prev,
-        email: decodeURIComponent(emailParam),
-      }));
-    }
-  }, [searchParams]);
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData({
@@ -36,14 +29,10 @@ export default function ResetPasswordPage() {
       [name]: value,
     });
 
-    if (name === "confirmPassword" || name === "newPassword") {
-      if (formData.newPassword && value) {
-        if (formData.newPassword !== formData.confirmPassword) {
-          setPasswordError("Passwords do not match");
-        } else {
-          setPasswordError("");
-        }
-      }
+    if (name === "confirmPassword" && formData.newPassword !== value) {
+      setPasswordError("Passwords do not match");
+    } else {
+      setPasswordError("");
     }
   }
 
@@ -51,7 +40,11 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
-    setPasswordError("");
+    
+    if (!formData.email) {
+      setError("Email is required");
+      return;
+    }
 
     if (formData.newPassword !== formData.confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -136,8 +129,8 @@ export default function ResetPasswordPage() {
                 type="email"
                 autoComplete="email"
                 required
-                readOnly
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-500 cursor-not-allowed sm:text-sm"
+                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
               />

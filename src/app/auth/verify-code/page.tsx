@@ -1,24 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function VerifyCodePage() {
+export default function VerifyCodePage({
+  searchParams,
+}: {
+  searchParams?: { email?: string };
+}) {
   const [code, setCode] = useState("");
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const emailParam = searchParams.get("email");
-    if (emailParam) {
-      setEmail(emailParam);
-    }
-  }, [searchParams]);
+  const email = searchParams?.email || "";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,7 +35,7 @@ export default function VerifyCodePage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ resetCode: code.trim() }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -123,19 +120,6 @@ export default function VerifyCodePage() {
             >
               {loading ? "Verifying..." : "Verify Code"}
             </button>
-          </div>
-
-          <div className="text-center">
-            <p className="text-sm text-gray-500">
-              Didn&apos;t receive code?{" "}
-              <button
-                type="button"
-                onClick={() => router.push("/auth/forgot-password")}
-                className="font-medium text-emerald-600 hover:text-emerald-500"
-              >
-                Resend
-              </button>
-            </p>
           </div>
         </form>
       </div>
