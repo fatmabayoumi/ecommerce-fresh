@@ -35,7 +35,11 @@ export default function ForgotPasswordPage() {
 
       setSuccess("Verification code sent to your email!");
       setTimeout(() => {
+<<<<<<< HEAD
         router.push(`/auth/verify-code?email=${encodeURIComponent(email)}`);
+=======
+        router.push(`/auth/verify_code?email=${encodeURIComponent(email)}`);
+>>>>>>> cf65576e0d13239b2859834500d1051d556e9fb9
       }, 1500);
     } catch (err: any) {
       setError(err.message || "Failed to send reset code");
@@ -102,4 +106,8 @@ export default function ForgotPasswordPage() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> cf65576e0d13239b2859834500d1051d556e9fb9

@@ -1,9 +1,10 @@
-// src/proxy.ts (NEW NAME)
+// src/proxy.ts
 import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
- 
-export async function middleware(request: NextRequest) {
+
+// Export as "proxy" function (not "middleware")
+export default async function proxy(request: NextRequest) {
   const token = await getToken({ 
     req: request,
     secret: process.env.NEXTAUTH_SECRET 
@@ -20,7 +21,7 @@ export async function middleware(request: NextRequest) {
   
   return NextResponse.next()
 }
- 
+
 export const config = {
   matcher: '/cart/:path*'
 }
