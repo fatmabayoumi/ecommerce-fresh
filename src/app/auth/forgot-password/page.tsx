@@ -22,25 +22,30 @@ export default function ForgotPasswordPage() {
         "https://ecommerce.routemisr.com/api/v1/auth/forgotPasswords",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "application/json" 
+          },
           body: JSON.stringify({ email }),
         }
       );
 
       const data = await res.json();
 
+      console.log("API Response:", data);
+
       if (!res.ok) {
-        throw new Error(data.message || "Something went wrong");
+        throw new Error(data.message || data.errors?.msg || "Something went wrong");
       }
 
-      setSuccess("Verification code sent to your email!");
-      setTimeout(() => {
-<<<<<<< HEAD
-        router.push(`/auth/verify-code?email=${encodeURIComponent(email)}`);
-=======
-        router.push(`/auth/verify_code?email=${encodeURIComponent(email)}`);
->>>>>>> cf65576e0d13239b2859834500d1051d556e9fb9
-      }, 1500);
+      if (data.statusMsg === "success" || data.message?.includes("success")) {
+        setSuccess("Verification code sent to your email!");
+        setTimeout(() => {
+          router.push(`/auth/verify-code?email=${encodeURIComponent(email)}`);
+        }, 1500);
+      } else {
+        throw new Error(data.message || "Failed to send reset code");
+      }
     } catch (err: any) {
       setError(err.message || "Failed to send reset code");
     } finally {
@@ -106,8 +111,4 @@ export default function ForgotPasswordPage() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> cf65576e0d13239b2859834500d1051d556e9fb9
